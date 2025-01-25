@@ -50,21 +50,24 @@ export function RunStats() {
           {/* Venue Statistics */}
           <div>
             <h3 className="text-sm font-medium text-black/70 mb-4">Most Visited Venues</h3>
-            <div className="space-y-3">
-              {venueStats?.venues.map((venue, index) => (
-                <div 
-                  key={index}
-                  className="flex justify-between items-center p-2 rounded-lg hover:bg-black/5"
-                >
-                  <span className="text-sm">{venue.venue}</span>
-                  <span className="text-sm font-mono">{venue.count}</span>
-                </div>
-              ))}
+            {/* Fixed height container for venue list */}
+            <div className="min-h-[240px]">
+              <div className="space-y-3">
+                {venueStats?.venues.map((venue, index) => (
+                  <div 
+                    key={index}
+                    className="flex justify-between items-center p-2 rounded-lg hover:bg-black/5"
+                  >
+                    <span className="text-sm">{venue.venue}</span>
+                    <span className="text-sm font-mono">{venue.count}</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* Pagination */}
+            {/* Pagination with fixed position */}
             {venueStats && (
-              <div className="flex justify-between items-center mt-4">
+              <div className="flex justify-between items-center mt-4 sticky bottom-0 bg-white/50 backdrop-blur-sm py-2">
                 <Button
                   variant="outline"
                   size="sm"
