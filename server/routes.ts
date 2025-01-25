@@ -7,8 +7,11 @@ async function fetchPhishData(endpoint: string) {
   try {
     const apiKey = process.env.PHISH_API_KEY;
     const response = await fetch(`${PHISH_API_BASE}${endpoint}.json?apikey=${apiKey}`);
-
     const data = await response.json();
+
+    // Add debug logging
+    console.log(`API Response for ${endpoint}:`, JSON.stringify(data, null, 2));
+
     if (!response.ok) {
       throw new Error(data.message || 'Failed to fetch data from Phish.net API');
     }
@@ -31,8 +34,7 @@ export function registerRoutes(app: Express): Server {
           date: show.showdate,
           venue: show.venue,
           location: `${show.city}, ${show.state}`,
-          rating: parseFloat(show.rating) || 0,
-          setlist_notes: show.setlist_notes || '',
+          rating: parseFloat(show.rating) || 0
         }));
 
       res.json(formattedShows);
@@ -44,8 +46,26 @@ export function registerRoutes(app: Express): Server {
   app.get('/api/setlists/:showId', async (req, res) => {
     try {
       const { showId } = req.params;
-      const setlist = await fetchPhishData(`/setlists/showid/${showId}`);
-      res.json(setlist);
+      const setlistData = await fetchPhishData(`/setlists/showid/${showId}`);
+
+      // Add debug logging
+      console.log('Setlist data for show:', showId, JSON.stringify(setlistData, null, 2));
+
+      // The API returns an array, we want the first item
+      if (Array.isArray(setlistData) && setlistData.length > 0) {
+        const setlist = setlistData[0];
+
+        // Format and return both setlist data and notes
+        res.json({
+          showdate: setlist.showdate,
+          venue: setlist.venue,
+          location: `${setlist.city}, ${setlist.state}`,
+          setlistdata: setlist.setlistdata || '',
+          setlistnotes: setlist.setlistnotes || ''
+        });
+      } else {
+        res.status(404).json({ message: 'Setlist not found' });
+      }
     } catch (error) {
       res.status(500).json({ message: (error as Error).message });
     }
