@@ -122,27 +122,25 @@ export function ShowStats() {
             </div>
           </div>
 
-          {showsData && (
-            <div className="mt-6 flex justify-between items-center px-4 max-w-full">
-              <Button
-                variant="outline"
-                onClick={() => setPage(p => Math.max(1, p - 1))}
-                disabled={page === 1 || isLoading}
-              >
-                Previous
-              </Button>
-              <span className="text-sm">
-                Page {page} of {showsData.pagination.total}
-              </span>
-              <Button
-                variant="outline"
-                onClick={() => setPage(p => p + 1)}
-                disabled={!showsData.pagination.hasMore || isLoading}
-              >
-                Next
-              </Button>
-            </div>
-          )}
+          <div className="mt-6 flex justify-between items-center px-4 max-w-full">
+            <Button
+              variant="outline"
+              onClick={() => setPage(p => Math.max(1, p - 1))}
+              disabled={isLoading || page === 1}
+            >
+              Previous
+            </Button>
+            <span className="text-sm">
+              Page {page} of {showsData?.pagination.total || '...'}
+            </span>
+            <Button
+              variant="outline"
+              onClick={() => setPage(p => p + 1)}
+              disabled={isLoading || !showsData?.pagination.hasMore}
+            >
+              Next
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
