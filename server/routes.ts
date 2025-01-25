@@ -54,14 +54,24 @@ export function registerRoutes(app: Express): Server {
 
   app.get('/api/songs/stats', async (_req, res) => {
     try {
-      const songs = await fetchPhishData('/setlists/recent');
-      const formattedSongs = songs
-        .sort((a: any, b: any) => b.count - a.count)
-        .slice(0, 5)
-        .map((song: any) => ({
-          name: song.song,
-          count: parseInt(song.count)
-        }));
+      const songs = await fetchPhishData('/attendance/username/koolyp');
+      const songCounts: { [key: string]: number } = {};
+
+      // Count songs from all shows
+      songs.forEach((show: any) => {
+        if (show.songdata) {
+          const showSongs = show.songdata.split(', ');
+          showSongs.forEach((song: string) => {
+            songCounts[song] = (songCounts[song] || 0) + 1;
+          });
+        }
+      });
+
+      // Convert to array and sort by count
+      const formattedSongs = Object.entries(songCounts)
+        .map(([name, count]) => ({ name, count }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 5);
 
       res.json(formattedSongs);
     } catch (error) {
@@ -76,9 +86,9 @@ export function registerRoutes(app: Express): Server {
       const uniqueVenues = new Set(shows.map((show: any) => show.venueid)).size;
       const totalShows = shows.length;
       const ratings = shows.map((show: any) => parseFloat(show.rating) || 0);
-      const validRatings = ratings.filter(r => r > 0);
+      const validRatings = ratings.filter((r: number) => r > 0);
       const averageRating = validRatings.length > 0 
-        ? validRatings.reduce((sum, r) => sum + r, 0) / validRatings.length
+        ? validRatings.reduce((sum: number, r: number) => sum + r, 0) / validRatings.length
         : 0;
 
       res.json({
