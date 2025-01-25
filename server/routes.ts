@@ -204,7 +204,7 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
-  app.get('/api/setlist/:songName', async (req, res) => {
+  app.get('/api/setlist/occurrences/:songName', async (req, res) => {
     try {
       const { songName } = req.params;
       const shows = await fetchPhishData('/attendance/username/koolyp');
