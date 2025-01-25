@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useQuery } from "@tanstack/react-query";
-import { getRecentShows } from "@/lib/phish-api";
+import { getRecentShows, getShowSetlist } from "@/lib/phish-api";
 import { useState } from "react";
 
 export function ShowStats() {
@@ -11,8 +11,13 @@ export function ShowStats() {
     queryFn: getRecentShows
   });
 
+  const { data: setlist } = useQuery({
+    queryKey: ['/api/setlists', selectedShow],
+    queryFn: () => selectedShow ? getShowSetlist(selectedShow) : null,
+    enabled: !!selectedShow
+  });
+
   const formatSetlist = (setlist: string) => {
-    // Split the setlist into lines for better formatting
     return setlist.split('\n').map((line, i) => (
       <p key={i} className="text-sm">{line}</p>
     ));
@@ -64,20 +69,20 @@ export function ShowStats() {
                     <p className="text-sm text-black/70">{show.location}</p>
                   </div>
                   {/* Setlist */}
-                  {show.setlist && (
+                  {setlist?.setlistdata && (
                     <div>
                       <h3 className="text-sm font-medium mb-2">Setlist</h3>
                       <div className="text-sm whitespace-pre-line font-mono bg-black/5 p-4 rounded-lg">
-                        {formatSetlist(show.setlist)}
+                        {formatSetlist(setlist.setlistdata)}
                       </div>
                     </div>
                   )}
                   {/* Notes */}
-                  {show.setlist_notes && (
+                  {setlist?.setlistnotes && (
                     <div>
                       <h3 className="text-sm font-medium mb-2">Notes</h3>
                       <p className="text-sm text-gray-600" 
-                         dangerouslySetInnerHTML={{ __html: show.setlist_notes }} 
+                         dangerouslySetInnerHTML={{ __html: setlist.setlistnotes }} 
                       />
                     </div>
                   )}

@@ -8,19 +8,7 @@ async function fetchPhishData(endpoint: string) {
     const apiKey = process.env.PHISH_API_KEY;
     const response = await fetch(`${PHISH_API_BASE}${endpoint}.json?apikey=${apiKey}`);
 
-    // Add debug logging
-    console.log(`Fetching from: ${PHISH_API_BASE}${endpoint}.json`);
-    const responseText = await response.text();
-    console.log('Response:', responseText);
-
-    let data;
-    try {
-      data = JSON.parse(responseText);
-    } catch (e) {
-      console.error('Failed to parse JSON:', e);
-      throw new Error(`Failed to parse response: ${responseText}`);
-    }
-
+    const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || 'Failed to fetch data from Phish.net API');
     }
@@ -45,10 +33,19 @@ export function registerRoutes(app: Express): Server {
           location: `${show.city}, ${show.state}`,
           rating: parseFloat(show.rating) || 0,
           setlist_notes: show.setlist_notes || '',
-          setlist: show.setlistdata || ''
         }));
 
       res.json(formattedShows);
+    } catch (error) {
+      res.status(500).json({ message: (error as Error).message });
+    }
+  });
+
+  app.get('/api/setlists/:showId', async (req, res) => {
+    try {
+      const { showId } = req.params;
+      const setlist = await fetchPhishData(`/setlists/showid/${showId}`);
+      res.json(setlist);
     } catch (error) {
       res.status(500).json({ message: (error as Error).message });
     }

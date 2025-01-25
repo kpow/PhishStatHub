@@ -44,3 +44,16 @@ interface SetlistShow {
   venue: string;
   setlist: string;
 }
+
+interface Setlist {
+  showdate: string;
+  venue: string;
+  location: string;
+  setlistdata: string;
+  setlistnotes: string;
+}
+
+export async function getShowSetlist(showId: string): Promise<Setlist> {
+  const response = await fetch(`/api/setlists/${showId}`);
+  return response.json();
+}
