@@ -9,9 +9,6 @@ async function fetchPhishData(endpoint: string) {
     const response = await fetch(`${PHISH_API_BASE}${endpoint}.json?apikey=${apiKey}`);
     const data = await response.json();
 
-    // Add debug logging
-    console.log(`API Response for ${endpoint}:`, JSON.stringify(data, null, 2));
-
     if (!response.ok) {
       throw new Error(data.message || 'Failed to fetch data from Phish.net API');
     }
@@ -30,6 +27,16 @@ export function registerRoutes(app: Express): Server {
       const limit = parseInt(req.query.limit as string) || 10;
 
       const shows = await fetchPhishData('/attendance/username/koolyp');
+
+      // Debug logs to see the show data structure
+      console.log('First show data structure:', {
+        show: shows[0],
+        ratingFields: Object.keys(shows[0]).filter(key => key.toLowerCase().includes('rating')),
+        ratingValues: Object.entries(shows[0])
+          .filter(([key]) => key.toLowerCase().includes('rating'))
+          .map(([key, value]) => `${key}: ${value}`)
+      });
+
       const sortedShows = shows.sort((a: any, b: any) => 
         new Date(b.showdate).getTime() - new Date(a.showdate).getTime()
       );
