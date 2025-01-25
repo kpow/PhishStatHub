@@ -20,6 +20,10 @@ async function fetchPhishData(endpoint: string) {
   }
 }
 
+function formatSongUrl(songName: string): string {
+  return `https://phish.net/song/${songName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}`;
+}
+
 export function registerRoutes(app: Express): Server {
   app.get('/api/shows', async (req, res) => {
     try {
@@ -220,7 +224,7 @@ export function registerRoutes(app: Express): Server {
               date: show.showdate,
               venue: show.venue,
               setlist: `Set ${songInSetlist.set}: ${songInSetlist.song}${songInSetlist.trans_mark || ''}`,
-              url: show.permalink || `https://phish.net/setlists/${show.showdate}`
+              url: formatSongUrl(songName)
             });
           }
         }
