@@ -25,7 +25,6 @@ interface ShowsResponse {
   };
 }
 
-// Map showday number to day name
 const DAYS_OF_WEEK = [
   'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
 ];
@@ -37,7 +36,7 @@ export function ShowStats() {
   const { data: showsData } = useQuery<ShowsResponse>({
     queryKey: ['/api/shows', page],
     queryFn: async () => {
-      const response = await fetch(`/api/shows?page=${page}&limit=10`);
+      const response = await fetch(`/api/shows?page=${page}&limit=12`); 
       if (!response.ok) throw new Error('Failed to fetch shows');
       return response.json();
     }
@@ -62,33 +61,33 @@ export function ShowStats() {
           <CardTitle className="font-slackey">Shows</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {showsData?.shows.map((show) => (
-              <div 
+              <Card 
                 key={show.id} 
-                className="flex justify-between items-start p-3 rounded-lg hover:bg-black/5 cursor-pointer transition-colors"
+                className="hover:bg-black/5 cursor-pointer transition-colors border border-black/10"
                 onClick={() => setSelectedShow(show.id)}
               >
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-medium">{show.venue}</h3>
-                    <a 
-                      href={show.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="text-black/50 hover:text-black transition-colors"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                    </a>
+                <CardContent className="p-4">
+                  <div className="flex flex-col h-full">
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="font-medium truncate flex-1">{show.venue}</h3>
+                      <a 
+                        href={show.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="text-black/50 hover:text-black transition-colors ml-2"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    </div>
+                    <p className="text-sm text-black/70">{show.date} • {DAYS_OF_WEEK[show.showday]}</p>
+                    <p className="text-sm text-black/70 mt-1">{show.location}</p>
+                    {show.tour && <p className="text-xs text-black/60 mt-auto pt-2">{show.tour}</p>}
                   </div>
-                  <p className="text-sm text-black/70">{show.date} • {DAYS_OF_WEEK[show.showday]}</p>
-                  {show.tour && <p className="text-xs text-black/60 mt-1">{show.tour}</p>}
-                </div>
-                <div className="text-right">
-                  <p className="text-sm">{show.location}</p>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
 
