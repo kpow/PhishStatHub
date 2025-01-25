@@ -28,6 +28,9 @@ export function registerRoutes(app: Express): Server {
 
       const shows = await fetchPhishData('/attendance/username/koolyp');
 
+      // Debug log to see tour information
+      console.log('First show tour data:', shows[0].tour, typeof shows[0].tour);
+
       const sortedShows = shows.sort((a: any, b: any) =>
         new Date(b.showdate).getTime() - new Date(a.showdate).getTime()
       );
@@ -42,7 +45,7 @@ export function registerRoutes(app: Express): Server {
         venue: show.venue,
         location: `${show.city}, ${show.state}`,
         showday: show.showday,
-        tour: show.tour || '',
+        tour: show.tourname || '',  // Changed from show.tour to show.tourname
         url: show.permalink
       }));
 
