@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { getRunStats } from "@/lib/phish-api";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useState } from "react";
 
 interface VenueStatsResponse {
@@ -20,7 +21,7 @@ export function RunStats() {
     queryFn: getRunStats
   });
 
-  const { data: venueStats } = useQuery<VenueStatsResponse>({
+  const { data: venueStats, isLoading } = useQuery<VenueStatsResponse>({
     queryKey: ['/api/venues/stats', page],
     queryFn: async () => {
       const response = await fetch(`/api/venues/stats?page=${page}&limit=5`);
@@ -48,31 +49,41 @@ export function RunStats() {
           </div>
 
           {/* Venue Statistics */}
-          <div>
+          <div className="relative">
             <h3 className="text-sm font-medium text-black/70 mb-4">Most Visited Venues</h3>
-            {/* Fixed height container for venue list */}
-            <div className="min-h-[240px]">
+            {/* Fixed height container for venue list with consistent height during loading */}
+            <div className="h-[240px] overflow-hidden">
               <div className="space-y-3">
-                {venueStats?.venues.map((venue, index) => (
-                  <div 
-                    key={index}
-                    className="flex justify-between items-center p-2 rounded-lg hover:bg-black/5"
-                  >
-                    <span className="text-sm">{venue.venue}</span>
-                    <span className="text-sm font-mono">{venue.count}</span>
-                  </div>
-                ))}
+                {isLoading ? (
+                  // Loading skeleton
+                  Array(5).fill(0).map((_, index) => (
+                    <div key={index} className="flex justify-between items-center p-2">
+                      <Skeleton className="h-4 w-[200px]" />
+                      <Skeleton className="h-4 w-[40px]" />
+                    </div>
+                  ))
+                ) : (
+                  venueStats?.venues.map((venue, index) => (
+                    <div 
+                      key={index}
+                      className="flex justify-between items-center p-2 rounded-lg hover:bg-black/5"
+                    >
+                      <span className="text-sm">{venue.venue}</span>
+                      <span className="text-sm font-mono">{venue.count}</span>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
 
             {/* Pagination with fixed position */}
             {venueStats && (
-              <div className="flex justify-between items-center mt-4 sticky bottom-0 bg-white/50 backdrop-blur-sm py-2">
+              <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center py-2 bg-white/50 backdrop-blur-sm border-t border-black/5">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setPage(p => Math.max(1, p - 1))}
-                  disabled={page === 1}
+                  disabled={page === 1 || isLoading}
                 >
                   Previous
                 </Button>
@@ -83,7 +94,7 @@ export function RunStats() {
                   variant="outline"
                   size="sm"
                   onClick={() => setPage(p => p + 1)}
-                  disabled={!venueStats.pagination.hasMore}
+                  disabled={!venueStats.pagination.hasMore || isLoading}
                 >
                   Next
                 </Button>
