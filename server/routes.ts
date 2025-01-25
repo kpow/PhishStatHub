@@ -43,56 +43,11 @@ export function registerRoutes(app: Express): Server {
           date: show.showdate,
           venue: show.venue,
           location: `${show.city}, ${show.state}`,
-          rating: parseFloat(show.rating) || 0
+          rating: parseFloat(show.rating) || 0,
+          setlist_notes: show.setlist_notes || ''
         }));
 
       res.json(formattedShows);
-    } catch (error) {
-      res.status(500).json({ message: (error as Error).message });
-    }
-  });
-
-  app.get('/api/songs/stats', async (_req, res) => {
-    try {
-      const songs = await fetchPhishData('/attendance/username/koolyp');
-      const songCounts: { [key: string]: number } = {};
-
-      // Count songs from all shows
-      songs.forEach((show: any) => {
-        if (show.songdata) {
-          const showSongs = show.songdata.split(', ');
-          showSongs.forEach((song: string) => {
-            songCounts[song] = (songCounts[song] || 0) + 1;
-          });
-        }
-      });
-
-      // Convert to array and sort by count
-      const formattedSongs = Object.entries(songCounts)
-        .map(([name, count]) => ({ name, count }))
-        .sort((a, b) => b.count - a.count)
-        .slice(0, 5);
-
-      res.json(formattedSongs);
-    } catch (error) {
-      res.status(500).json({ message: (error as Error).message });
-    }
-  });
-
-  app.get('/api/setlist/:songName', async (req, res) => {
-    try {
-      const shows = await fetchPhishData('/attendance/username/koolyp');
-      const songName = req.params.songName;
-
-      const showsWithSong = shows
-        .filter((show: any) => show.songdata && show.songdata.includes(songName))
-        .map((show: any) => ({
-          date: show.showdate,
-          venue: show.venue,
-          setlist: show.setlist_notes || 'No setlist notes available'
-        }));
-
-      res.json(showsWithSong);
     } catch (error) {
       res.status(500).json({ message: (error as Error).message });
     }

@@ -4,6 +4,7 @@ interface Show {
   venue: string;
   location: string;
   rating: number;
+  setlist_notes?: string;
 }
 
 interface SongStat {

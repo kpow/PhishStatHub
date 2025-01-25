@@ -1,6 +1,5 @@
 import { Nav } from "@/components/layout/nav";
 import { ShowStats } from "@/components/stats/show-stats";
-import { SongStats } from "@/components/stats/song-stats";
 import { RunStats } from "@/components/stats/run-stats";
 import { Card } from "@/components/ui/card";
 
@@ -12,7 +11,6 @@ export default function Home() {
         <main className="container mx-auto p-4">
           <div className="grid gap-6">
             <ShowStats />
-            <SongStats />
             <RunStats />
           </div>
         </main>
