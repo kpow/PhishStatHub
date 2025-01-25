@@ -33,15 +33,17 @@ const DAYS_OF_WEEK = [
 function ShowSkeleton() {
   return (
     <Card className="border border-black/10">
-      <CardContent className="p-4">
-        <div className="flex flex-col h-full gap-2">
-          <div className="flex items-start justify-between">
-            <Skeleton className="h-6 w-3/4" />
-            <Skeleton className="h-4 w-4" />
+      <CardContent className="p-4 h-[134px]">
+        <div className="flex flex-col h-full justify-between">
+          <div className="space-y-2">
+            <div className="flex items-start justify-between">
+              <Skeleton className="h-6 w-3/4" />
+              <Skeleton className="h-4 w-4" />
+            </div>
+            <Skeleton className="h-4 w-1/2" />
+            <Skeleton className="h-4 w-2/3" />
           </div>
-          <Skeleton className="h-4 w-1/2" />
-          <Skeleton className="h-4 w-2/3" />
-          <Skeleton className="h-4 w-1/3 mt-auto" />
+          <Skeleton className="h-4 w-1/3" />
         </div>
       </CardContent>
     </Card>
@@ -93,23 +95,25 @@ export function ShowStats() {
                     className="hover:bg-black/5 cursor-pointer transition-colors border border-black/10"
                     onClick={() => setSelectedShow(show.id)}
                   >
-                    <CardContent className="p-4">
-                      <div className="flex flex-col h-full">
-                        <div className="flex items-start justify-between mb-2">
-                          <h3 className="font-medium truncate flex-1 pr-2">{show.venue}</h3>
-                          <a 
-                            href={show.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="text-black/50 hover:text-black transition-colors shrink-0"
-                          >
-                            <ExternalLink className="h-4 w-4" />
-                          </a>
+                    <CardContent className="p-4 h-[134px]">
+                      <div className="flex flex-col h-full justify-between">
+                        <div className="space-y-2">
+                          <div className="flex items-start justify-between">
+                            <h3 className="font-medium truncate flex-1 pr-2">{show.venue}</h3>
+                            <a 
+                              href={show.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="text-black/50 hover:text-black transition-colors shrink-0"
+                            >
+                              <ExternalLink className="h-4 w-4" />
+                            </a>
+                          </div>
+                          <p className="text-sm text-black/70">{show.date} • {DAYS_OF_WEEK[show.showday]}</p>
+                          <p className="text-sm text-black/70">{show.location}</p>
                         </div>
-                        <p className="text-sm text-black/70">{show.date} • {DAYS_OF_WEEK[show.showday]}</p>
-                        <p className="text-sm text-black/70 mt-1">{show.location}</p>
-                        {show.tour && <p className="text-xs text-black/60 mt-auto pt-2">{show.tour}</p>}
+                        {show.tour && <p className="text-xs text-black/60">{show.tour}</p>}
                       </div>
                     </CardContent>
                   </Card>
