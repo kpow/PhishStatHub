@@ -20,7 +20,7 @@ export function SongStats() {
     queryFn: getSongStats
   });
 
-  const { data: setlist } = useQuery({
+  const { data: occurrences, isLoading: isLoadingOccurrences } = useQuery({
     queryKey: ['/api/setlist/occurrences', selectedSong],
     queryFn: () => selectedSong ? getSetlistOccurrences(selectedSong) : null,
     enabled: !!selectedSong
@@ -138,18 +138,36 @@ export function SongStats() {
       </Card>
 
       <Dialog open={!!selectedSong} onOpenChange={() => setSelectedSong(null)}>
-        <DialogContent>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{selectedSong}</DialogTitle>
+            <DialogTitle className="flex justify-between items-center">
+              <span>{selectedSong}</span>
+              {occurrences && <span className="text-sm font-normal">Played {occurrences.length} times</span>}
+            </DialogTitle>
           </DialogHeader>
-          <div className="mt-4 space-y-4">
-            {setlist?.map((show, index) => (
-              <div key={index} className="border-b pb-2">
-                <h3 className="font-medium">{show.date}</h3>
-                <p className="text-sm text-black/70">{show.venue}</p>
-                <p className="text-sm mt-1">{show.setlist}</p>
+          <div className="mt-4">
+            {isLoadingOccurrences ? (
+              <div className="space-y-4">
+                {Array(3).fill(0).map((_, i) => (
+                  <div key={i} className="border-b pb-2">
+                    <Skeleton className="h-4 w-32 mb-2" />
+                    <Skeleton className="h-3 w-48" />
+                  </div>
+                ))}
               </div>
-            ))}
+            ) : occurrences && occurrences.length > 0 ? (
+              <div className="space-y-4">
+                {occurrences.map((occurrence, index) => (
+                  <div key={index} className="border-b pb-2">
+                    <p className="font-medium">{occurrence.date}</p>
+                    <p className="text-sm text-black/70">{occurrence.venue}</p>
+                    <p className="text-sm mt-1">{occurrence.setlist}</p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-center text-black/70">No occurrences found.</p>
+            )}
           </div>
         </DialogContent>
       </Dialog>
