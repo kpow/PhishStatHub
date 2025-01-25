@@ -6,11 +6,10 @@ const PHISH_API_BASE = 'https://api.phish.net/v5';
 async function fetchPhishData(endpoint: string) {
   try {
     const apiKey = process.env.PHISH_API_KEY;
-    const username = process.env.PHISH_USERNAME;
-    const response = await fetch(`${PHISH_API_BASE}${endpoint}?apikey=${apiKey}&username=${username}`);
+    const response = await fetch(`${PHISH_API_BASE}${endpoint}.json?apikey=${apiKey}`);
 
     // Add debug logging
-    console.log(`Fetching from: ${PHISH_API_BASE}${endpoint}`);
+    console.log(`Fetching from: ${PHISH_API_BASE}${endpoint}.json`);
     const responseText = await response.text();
     console.log('Response:', responseText);
 
@@ -36,7 +35,7 @@ async function fetchPhishData(endpoint: string) {
 export function registerRoutes(app: Express): Server {
   app.get('/api/shows/recent', async (_req, res) => {
     try {
-      const shows = await fetchPhishData('/shows/usershow/get/username/koolyp');
+      const shows = await fetchPhishData('/attendance/username/koolyp');
       const formattedShows = shows
         .slice(0, 5)
         .map((show: any) => ({
@@ -55,7 +54,7 @@ export function registerRoutes(app: Express): Server {
 
   app.get('/api/songs/stats', async (_req, res) => {
     try {
-      const songs = await fetchPhishData('/shows/songshows/get/username/koolyp');
+      const songs = await fetchPhishData('/setlists/recent');
       const formattedSongs = songs
         .sort((a: any, b: any) => b.count - a.count)
         .slice(0, 5)
@@ -72,7 +71,7 @@ export function registerRoutes(app: Express): Server {
 
   app.get('/api/runs/stats', async (_req, res) => {
     try {
-      const shows = await fetchPhishData('/shows/usershow/get/username/koolyp');
+      const shows = await fetchPhishData('/attendance/username/koolyp');
 
       const uniqueVenues = new Set(shows.map((show: any) => show.venueid)).size;
       const totalShows = shows.length;
