@@ -3,6 +3,9 @@ interface Show {
   date: string;
   venue: string;
   location: string;
+  showday: number;
+  tour: string;
+  url: string;
 }
 
 interface SongStat {

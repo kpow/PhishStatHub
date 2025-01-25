@@ -40,7 +40,10 @@ export function registerRoutes(app: Express): Server {
         id: show.showid,
         date: show.showdate,
         venue: show.venue,
-        location: `${show.city}, ${show.state}`
+        location: `${show.city}, ${show.state}`,
+        showday: show.showday,
+        tour: show.tour || 'No Tour',
+        url: `https://phish.net/setlists/${show.showdate}`
       }));
 
       const total = shows.length;

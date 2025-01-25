@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 import { getShowSetlist } from "@/lib/phish-api";
+import { ExternalLink } from "lucide-react";
 import { useState } from "react";
 
 interface Show {
@@ -10,6 +11,9 @@ interface Show {
   date: string;
   venue: string;
   location: string;
+  showday: number;
+  tour: string;
+  url: string;
 }
 
 interface ShowsResponse {
@@ -20,6 +24,11 @@ interface ShowsResponse {
     hasMore: boolean;
   };
 }
+
+// Map showday number to day name
+const DAYS_OF_WEEK = [
+  'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
+];
 
 export function ShowStats() {
   const [selectedShow, setSelectedShow] = useState<string | null>(null);
@@ -57,12 +66,24 @@ export function ShowStats() {
             {showsData?.shows.map((show) => (
               <div 
                 key={show.id} 
-                className="flex justify-between items-center p-3 rounded-lg hover:bg-black/5 cursor-pointer transition-colors"
+                className="flex justify-between items-start p-3 rounded-lg hover:bg-black/5 cursor-pointer transition-colors"
                 onClick={() => setSelectedShow(show.id)}
               >
-                <div>
-                  <h3 className="font-medium">{show.venue}</h3>
-                  <p className="text-sm text-black/70">{show.date}</p>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-medium">{show.venue}</h3>
+                    <a 
+                      href={show.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-black/50 hover:text-black transition-colors"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </div>
+                  <p className="text-sm text-black/70">{show.date} • {DAYS_OF_WEEK[show.showday]}</p>
+                  {show.tour && <p className="text-xs text-black/60 mt-1">{show.tour}</p>}
                 </div>
                 <div className="text-right">
                   <p className="text-sm">{show.location}</p>
@@ -110,8 +131,11 @@ export function ShowStats() {
               return (
                 <>
                   <div>
-                    <p className="text-sm font-medium text-black/70">{show.date}</p>
+                    <p className="text-sm font-medium text-black/70">
+                      {show.date} • {DAYS_OF_WEEK[show.showday]}
+                    </p>
                     <p className="text-sm text-black/70">{show.location}</p>
+                    {show.tour && <p className="text-sm text-black/60 mt-1">{show.tour}</p>}
                   </div>
                   {/* Setlist */}
                   {setlist?.setlistdata && (
