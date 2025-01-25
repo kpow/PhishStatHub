@@ -142,7 +142,19 @@ export function SongStats() {
         <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex justify-between items-center">
-              <span>{selectedSong}</span>
+              <div className="flex items-center gap-2">
+                <span>{selectedSong}</span>
+                {occurrences?.[0]?.url && (
+                  <a 
+                    href={occurrences[0].url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-black/50 hover:text-black transition-colors"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
+                )}
+              </div>
               {occurrences && <span className="text-sm font-normal">Played {occurrences.length} times</span>}
             </DialogTitle>
           </DialogHeader>
@@ -160,17 +172,7 @@ export function SongStats() {
               <div className="space-y-4">
                 {occurrences.map((occurrence, index) => (
                   <div key={index} className="border-b pb-2">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium">{occurrence.date}</p>
-                      <a 
-                        href={occurrence.url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-black/50 hover:text-black transition-colors"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
-                    </div>
+                    <p className="font-medium">{occurrence.date}</p>
                     <p className="text-sm text-black/70">{occurrence.venue}</p>
                     <p className="text-sm mt-1">{occurrence.setlist}</p>
                   </div>
