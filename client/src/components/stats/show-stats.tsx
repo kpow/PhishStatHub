@@ -36,7 +36,7 @@ export function ShowStats() {
   const { data: showsData } = useQuery<ShowsResponse>({
     queryKey: ['/api/shows', page],
     queryFn: async () => {
-      const response = await fetch(`/api/shows?page=${page}&limit=12`); 
+      const response = await fetch(`/api/shows?page=${page}&limit=12`);
       if (!response.ok) throw new Error('Failed to fetch shows');
       return response.json();
     }
@@ -60,24 +60,24 @@ export function ShowStats() {
         <CardHeader>
           <CardTitle className="font-slackey">Shows</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <CardContent className="p-4 md:p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {showsData?.shows.map((show) => (
               <Card 
                 key={show.id} 
-                className="hover:bg-black/5 cursor-pointer transition-colors border border-black/10"
+                className="hover:bg-black/5 cursor-pointer transition-colors border border-black/10 w-full"
                 onClick={() => setSelectedShow(show.id)}
               >
                 <CardContent className="p-4">
                   <div className="flex flex-col h-full">
                     <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-medium truncate flex-1">{show.venue}</h3>
+                      <h3 className="font-medium truncate flex-1 pr-2">{show.venue}</h3>
                       <a 
                         href={show.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="text-black/50 hover:text-black transition-colors ml-2"
+                        className="text-black/50 hover:text-black transition-colors shrink-0"
                       >
                         <ExternalLink className="h-4 w-4" />
                       </a>
