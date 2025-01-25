@@ -116,7 +116,7 @@ export function ShowStats() {
       </Card>
 
       <Dialog open={!!selectedShow} onOpenChange={() => setSelectedShow(null)}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl" description="Show details and setlist">
           <DialogHeader>
             <DialogTitle>
               {showsData?.shows.find(s => s.id === selectedShow)?.venue}
