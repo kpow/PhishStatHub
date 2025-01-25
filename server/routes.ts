@@ -124,8 +124,10 @@ export function registerRoutes(app: Express): Server {
 
       const uniqueVenues = new Set(shows.map((show: any) => show.venueid)).size;
       const totalShows = shows.length;
-      const ratings = shows.map((show: any) => show.rating ? parseFloat(show.rating) : null)
-                          .filter((r: number | null): r is number => r !== null);
+      const ratings = shows
+        .map((show: any) => show.rating ? parseFloat(show.rating) : null)
+        .filter((r: number | null): r is number => r !== null && !isNaN(r));
+
       const averageRating = ratings.length > 0 
         ? ratings.reduce((sum: number, r: number) => sum + r, 0) / ratings.length
         : 0;
