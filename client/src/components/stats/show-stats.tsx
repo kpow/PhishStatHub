@@ -64,32 +64,33 @@ export function ShowStats() {
           <div className="w-full max-w-[90rem] mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {showsData?.shows.map((show) => (
-              <Card 
-                key={show.id} 
-                className="hover:bg-black/5 cursor-pointer transition-colors border border-black/10"
-                onClick={() => setSelectedShow(show.id)}
-              >
-                <CardContent className="p-4">
-                  <div className="flex flex-col h-full">
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-medium truncate flex-1 pr-2">{show.venue}</h3>
-                      <a 
-                        href={show.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="text-black/50 hover:text-black transition-colors shrink-0"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
+                <Card 
+                  key={show.id} 
+                  className="hover:bg-black/5 cursor-pointer transition-colors border border-black/10"
+                  onClick={() => setSelectedShow(show.id)}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex flex-col h-full">
+                      <div className="flex items-start justify-between mb-2">
+                        <h3 className="font-medium truncate flex-1 pr-2">{show.venue}</h3>
+                        <a 
+                          href={show.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-black/50 hover:text-black transition-colors shrink-0"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
+                      </div>
+                      <p className="text-sm text-black/70">{show.date} • {DAYS_OF_WEEK[show.showday]}</p>
+                      <p className="text-sm text-black/70 mt-1">{show.location}</p>
+                      {show.tour && <p className="text-xs text-black/60 mt-auto pt-2">{show.tour}</p>}
                     </div>
-                    <p className="text-sm text-black/70">{show.date} • {DAYS_OF_WEEK[show.showday]}</p>
-                    <p className="text-sm text-black/70 mt-1">{show.location}</p>
-                    {show.tour && <p className="text-xs text-black/60 mt-auto pt-2">{show.tour}</p>}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
 
           {showsData && (
