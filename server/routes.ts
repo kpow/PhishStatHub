@@ -3,6 +3,11 @@ import { createServer, type Server } from "http";
 
 const PHISH_API_BASE = 'https://api.phish.net/v5';
 
+interface VenueCount {
+  venue: string;
+  count: number;
+}
+
 async function fetchPhishData(endpoint: string) {
   try {
     const apiKey = process.env.PHISH_API_KEY;
@@ -81,10 +86,10 @@ export function registerRoutes(app: Express): Server {
         return acc;
       }, {});
 
-      // Convert to array and sort by count
-      const sortedVenues = Object.entries(venueStats)
-        .map(([venue, count]) => ({ venue, count }))
-        .sort((a, b) => b.count - a.count);
+      // Convert to array and sort by count with proper typing
+      const sortedVenues: VenueCount[] = Object.entries(venueStats)
+        .map(([venue, count]): VenueCount => ({ venue, count }))
+        .sort((a: VenueCount, b: VenueCount) => b.count - a.count);
 
       const start = (page - 1) * limit;
       const end = start + limit;
