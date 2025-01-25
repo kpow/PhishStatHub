@@ -146,7 +146,7 @@ export function SongStats() {
             {setlist?.map((show, index) => (
               <div key={index} className="border-b pb-2">
                 <h3 className="font-medium">{show.date}</h3>
-                <p className="text-sm text-gray-600">{show.venue}</p>
+                <p className="text-sm text-black/70">{show.venue}</p>
                 <p className="text-sm mt-1">{show.setlist}</p>
               </div>
             ))}

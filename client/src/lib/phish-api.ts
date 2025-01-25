@@ -52,11 +52,6 @@ export async function getVenueStats(page: number): Promise<PaginatedResponse<Ven
   return response.json();
 }
 
-export async function getSetlist(songName: string): Promise<SetlistShow[]> {
-  const response = await fetch(`/api/setlist/${encodeURIComponent(songName)}`);
-  return response.json();
-}
-
 interface SetlistShow {
   date: string;
   venue: string;
