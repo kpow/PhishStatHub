@@ -66,19 +66,6 @@ A comprehensive Phish statistics dashboard that provides in-depth insights into 
 
 ## Deployment
 
-### Deploying on Replit
-
-1. Fork the repository on Replit
-2. Add your `PHISH_API_KEY` to Replit's Secrets
-3. The project will automatically configure for deployment
-
-The app uses Replit's built-in deployment system with the following configuration:
-- Port: 5000 (configured in `.replit`)
-- Node.js version: 20.x
-- Development command: `npm run dev`
-- Production build command: `npm run build`
-- Production start command: `npm run start`
-
 ### Manual Deployment
 
 For deployment on other platforms:
