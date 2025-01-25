@@ -28,15 +28,6 @@ export function registerRoutes(app: Express): Server {
 
       const shows = await fetchPhishData('/attendance/username/koolyp');
 
-      // Debug logs to see the show data structure
-      console.log('First show data structure:', {
-        show: shows[0],
-        ratingFields: Object.keys(shows[0]).filter(key => key.toLowerCase().includes('rating')),
-        ratingValues: Object.entries(shows[0])
-          .filter(([key]) => key.toLowerCase().includes('rating'))
-          .map(([key, value]) => `${key}: ${value}`)
-      });
-
       const sortedShows = shows.sort((a: any, b: any) => 
         new Date(b.showdate).getTime() - new Date(a.showdate).getTime()
       );
@@ -49,8 +40,7 @@ export function registerRoutes(app: Express): Server {
         id: show.showid,
         date: show.showdate,
         venue: show.venue,
-        location: `${show.city}, ${show.state}`,
-        rating: show.rating ? parseFloat(show.rating) : null
+        location: `${show.city}, ${show.state}`
       }));
 
       const total = shows.length;
@@ -131,18 +121,10 @@ export function registerRoutes(app: Express): Server {
 
       const uniqueVenues = new Set(shows.map((show: any) => show.venueid)).size;
       const totalShows = shows.length;
-      const ratings = shows
-        .map((show: any) => show.rating ? parseFloat(show.rating) : null)
-        .filter((r: number | null): r is number => r !== null && !isNaN(r));
-
-      const averageRating = ratings.length > 0 
-        ? ratings.reduce((sum: number, r: number) => sum + r, 0) / ratings.length
-        : 0;
 
       res.json({
         totalShows,
         uniqueVenues,
-        averageRating
       });
     } catch (error) {
       res.status(500).json({ message: (error as Error).message });

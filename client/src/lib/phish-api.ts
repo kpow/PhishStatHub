@@ -3,9 +3,6 @@ interface Show {
   date: string;
   venue: string;
   location: string;
-  rating: number;
-  setlist_notes?: string;
-  setlist?: string;
 }
 
 interface SongStat {
@@ -16,7 +13,6 @@ interface SongStat {
 interface RunStats {
   totalShows: number;
   uniqueVenues: number;
-  averageRating: number;
 }
 
 export async function getRecentShows(): Promise<Show[]> {

@@ -10,7 +10,6 @@ interface Show {
   date: string;
   venue: string;
   location: string;
-  rating: number | null;
 }
 
 interface ShowsResponse {
@@ -67,9 +66,6 @@ export function ShowStats() {
                 </div>
                 <div className="text-right">
                   <p className="text-sm">{show.location}</p>
-                  {show.rating !== null && (
-                    <p className="text-sm text-black/70">{show.rating.toFixed(1)} avg rating</p>
-                  )}
                 </div>
               </div>
             ))}
