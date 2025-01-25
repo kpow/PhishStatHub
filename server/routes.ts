@@ -65,6 +65,43 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
+  app.get('/api/venues/stats', async (req, res) => {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 5;
+      const shows = await fetchPhishData('/attendance/username/koolyp');
+
+      // Count shows per venue
+      const venueStats = shows.reduce((acc: {[key: string]: number}, show: any) => {
+        acc[show.venue] = (acc[show.venue] || 0) + 1;
+        return acc;
+      }, {});
+
+      // Convert to array and sort by count
+      const sortedVenues = Object.entries(venueStats)
+        .map(([venue, count]) => ({ venue, count }))
+        .sort((a, b) => b.count - a.count);
+
+      const start = (page - 1) * limit;
+      const end = start + limit;
+      const paginatedVenues = sortedVenues.slice(start, end);
+
+      const total = sortedVenues.length;
+      const totalPages = Math.ceil(total / limit);
+
+      res.json({
+        venues: paginatedVenues,
+        pagination: {
+          current: page,
+          total: totalPages,
+          hasMore: page < totalPages
+        }
+      });
+    } catch (error) {
+      res.status(500).json({ message: (error as Error).message });
+    }
+  });
+
   app.get('/api/setlists/:showId', async (req, res) => {
     try {
       const { showId } = req.params;

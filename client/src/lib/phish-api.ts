@@ -18,6 +18,20 @@ interface RunStats {
   uniqueVenues: number;
 }
 
+interface VenueStat {
+  venue: string;
+  count: number;
+}
+
+interface PaginatedResponse<T> {
+  data: T[];
+  pagination: {
+    current: number;
+    total: number;
+    hasMore: boolean;
+  };
+}
+
 export async function getRecentShows(): Promise<Show[]> {
   const response = await fetch('/api/shows/recent');
   return response.json();
@@ -30,6 +44,11 @@ export async function getSongStats(): Promise<SongStat[]> {
 
 export async function getRunStats(): Promise<RunStats> {
   const response = await fetch('/api/runs/stats');
+  return response.json();
+}
+
+export async function getVenueStats(page: number): Promise<PaginatedResponse<VenueStat>> {
+  const response = await fetch(`/api/venues/stats?page=${page}`);
   return response.json();
 }
 
