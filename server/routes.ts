@@ -1,29 +1,52 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 
+const PHISH_API_BASE = 'https://api.phish.net/v5';
+
+async function fetchPhishData(endpoint: string) {
+  try {
+    const apiKey = process.env.PHISH_API_KEY;
+    const response = await fetch(`${PHISH_API_BASE}${endpoint}?apikey=${apiKey}`);
+
+    // Add debug logging
+    console.log(`Fetching from: ${PHISH_API_BASE}${endpoint}`);
+    const responseText = await response.text();
+    console.log('Response:', responseText);
+
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (e) {
+      console.error('Failed to parse JSON:', e);
+      throw new Error(`Failed to parse response: ${responseText}`);
+    }
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to fetch data from Phish.net API');
+    }
+
+    return data.data;
+  } catch (error) {
+    console.error('Error fetching from Phish.net:', error);
+    throw error;
+  }
+}
+
 export function registerRoutes(app: Express): Server {
-  // Proxy routes to Phish.net API
   app.get('/api/shows/recent', async (_req, res) => {
     try {
-      const apiKey = process.env.PHISH_API_KEY;
-      const response = await fetch(`https://api.phish.net/v5/user/shows/koolyp?apikey=${apiKey}`);
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to fetch shows');
-      }
-
-      const shows = data.data
+      const shows = await fetchPhishData('/shows/user/koolyp');
+      const formattedShows = shows
         .slice(0, 5)
         .map((show: any) => ({
           id: show.showid,
           date: show.showdate,
           venue: show.venue,
           location: `${show.city}, ${show.state}`,
-          rating: parseFloat(show.rating)
+          rating: parseFloat(show.rating) || 0
         }));
 
-      res.json(shows);
+      res.json(formattedShows);
     } catch (error) {
       res.status(500).json({ message: (error as Error).message });
     }
@@ -31,15 +54,8 @@ export function registerRoutes(app: Express): Server {
 
   app.get('/api/songs/stats', async (_req, res) => {
     try {
-      const apiKey = process.env.PHISH_API_KEY;
-      const response = await fetch(`https://api.phish.net/v5/user/songs/koolyp/1?apikey=${apiKey}`);
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to fetch song stats');
-      }
-
-      const songs = data.data
+      const songs = await fetchPhishData('/shows/songs/user/koolyp/1');
+      const formattedSongs = songs
         .sort((a: any, b: any) => b.count - a.count)
         .slice(0, 5)
         .map((song: any) => ({
@@ -47,7 +63,7 @@ export function registerRoutes(app: Express): Server {
           count: parseInt(song.count)
         }));
 
-      res.json(songs);
+      res.json(formattedSongs);
     } catch (error) {
       res.status(500).json({ message: (error as Error).message });
     }
@@ -55,19 +71,15 @@ export function registerRoutes(app: Express): Server {
 
   app.get('/api/runs/stats', async (_req, res) => {
     try {
-      const apiKey = process.env.PHISH_API_KEY;
-      const response = await fetch(`https://api.phish.net/v5/user/shows/koolyp?apikey=${apiKey}`);
-      const data = await response.json();
+      const shows = await fetchPhishData('/shows/user/koolyp');
 
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to fetch run stats');
-      }
-
-      const shows = data.data;
       const uniqueVenues = new Set(shows.map((show: any) => show.venueid)).size;
       const totalShows = shows.length;
-      const averageRating = shows.reduce((sum: number, show: any) => 
-        sum + (parseFloat(show.rating) || 0), 0) / totalShows;
+      const ratings = shows.map((show: any) => parseFloat(show.rating) || 0);
+      const validRatings = ratings.filter(r => r > 0);
+      const averageRating = validRatings.length > 0 
+        ? validRatings.reduce((sum, r) => sum + r, 0) / validRatings.length
+        : 0;
 
       res.json({
         totalShows,
