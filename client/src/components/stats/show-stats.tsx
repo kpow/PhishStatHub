@@ -60,9 +60,10 @@ export function ShowStats() {
         <CardHeader>
           <CardTitle className="font-slackey">Shows</CardTitle>
         </CardHeader>
-        <CardContent className="p-4 overflow-x-hidden">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto"> {/* Added max-width */}
-            {showsData?.shows.map((show) => (
+        <CardContent className="p-4">
+          <div className="w-full max-w-[90rem] mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              {showsData?.shows.map((show) => (
               <Card 
                 key={show.id} 
                 className="hover:bg-black/5 cursor-pointer transition-colors border border-black/10"
@@ -92,7 +93,7 @@ export function ShowStats() {
           </div>
 
           {showsData && (
-            <div className="mt-6 flex justify-between items-center">
+            <div className="mt-6 flex justify-between items-center px-4 max-w-full">
               <Button
                 variant="outline"
                 onClick={() => setPage(p => Math.max(1, p - 1))}
