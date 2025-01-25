@@ -1,6 +1,7 @@
 import { Nav } from "@/components/layout/nav";
 import { ShowStats } from "@/components/stats/show-stats";
 import { RunStats } from "@/components/stats/run-stats";
+import { SongStats } from "@/components/stats/song-stats";
 import { Card } from "@/components/ui/card";
 
 export default function Home() {
@@ -12,6 +13,7 @@ export default function Home() {
           <div className="grid gap-6">
             <ShowStats />
             <RunStats />
+            <SongStats />
           </div>
         </main>
       </div>

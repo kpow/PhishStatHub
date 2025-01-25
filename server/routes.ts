@@ -174,6 +174,36 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
+  app.get('/api/songs/stats', async (_req, res) => {
+    try {
+      const shows = await fetchPhishData('/attendance/username/koolyp');
+      const songCounts = new Map<string, number>();
+
+      // Fetch setlist for each show
+      for (const show of shows) {
+        const setlist = await fetchPhishData(`/setlists/showid/${show.showid}`);
+        if (Array.isArray(setlist)) {
+          setlist.forEach((entry: any) => {
+            const songName = entry.song;
+            if (songName) {
+              songCounts.set(songName, (songCounts.get(songName) || 0) + 1);
+            }
+          });
+        }
+      }
+
+      // Convert to array and sort by count
+      const songStats = Array.from(songCounts.entries())
+        .map(([name, count]) => ({ name, count }))
+        .sort((a, b) => b.count - a.count);
+
+      res.json(songStats);
+    } catch (error) {
+      console.error('Error fetching song stats:', error);
+      res.status(500).json({ message: (error as Error).message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
