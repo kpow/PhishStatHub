@@ -24,20 +24,39 @@ async function fetchPhishData(endpoint: string) {
 }
 
 export function registerRoutes(app: Express): Server {
-  app.get('/api/shows/recent', async (_req, res) => {
+  app.get('/api/shows', async (req, res) => {
     try {
-      const shows = await fetchPhishData('/attendance/username/koolyp');
-      const formattedShows = shows
-        .slice(0, 5)
-        .map((show: any) => ({
-          id: show.showid,
-          date: show.showdate,
-          venue: show.venue,
-          location: `${show.city}, ${show.state}`,
-          rating: parseFloat(show.rating) || 0
-        }));
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
 
-      res.json(formattedShows);
+      const shows = await fetchPhishData('/attendance/username/koolyp');
+      const sortedShows = shows.sort((a: any, b: any) => 
+        new Date(b.showdate).getTime() - new Date(a.showdate).getTime()
+      );
+
+      const start = (page - 1) * limit;
+      const end = start + limit;
+      const paginatedShows = sortedShows.slice(start, end);
+
+      const formattedShows = paginatedShows.map((show: any) => ({
+        id: show.showid,
+        date: show.showdate,
+        venue: show.venue,
+        location: `${show.city}, ${show.state}`,
+        rating: show.rating ? parseFloat(show.rating) : null
+      }));
+
+      const total = shows.length;
+      const totalPages = Math.ceil(total / limit);
+
+      res.json({
+        shows: formattedShows,
+        pagination: {
+          current: page,
+          total: totalPages,
+          hasMore: page < totalPages
+        }
+      });
     } catch (error) {
       res.status(500).json({ message: (error as Error).message });
     }
@@ -47,15 +66,6 @@ export function registerRoutes(app: Express): Server {
     try {
       const { showId } = req.params;
       const setlistData = await fetchPhishData(`/setlists/showid/${showId}`);
-
-      // Add debug logging for setlist data structure
-      console.log('Setlist data structure:', {
-        raw: setlistData,
-        isArray: Array.isArray(setlistData),
-        length: Array.isArray(setlistData) ? setlistData.length : 0,
-        firstItem: Array.isArray(setlistData) && setlistData.length > 0 ? setlistData[0] : null,
-        keys: Array.isArray(setlistData) && setlistData.length > 0 ? Object.keys(setlistData[0]) : []
-      });
 
       if (Array.isArray(setlistData) && setlistData.length > 0) {
         // Group songs by set
@@ -114,10 +124,10 @@ export function registerRoutes(app: Express): Server {
 
       const uniqueVenues = new Set(shows.map((show: any) => show.venueid)).size;
       const totalShows = shows.length;
-      const ratings = shows.map((show: any) => parseFloat(show.rating) || 0);
-      const validRatings = ratings.filter((r: number) => r > 0);
-      const averageRating = validRatings.length > 0 
-        ? validRatings.reduce((sum: number, r: number) => sum + r, 0) / validRatings.length
+      const ratings = shows.map((show: any) => show.rating ? parseFloat(show.rating) : null)
+                          .filter((r: number | null): r is number => r !== null);
+      const averageRating = ratings.length > 0 
+        ? ratings.reduce((sum: number, r: number) => sum + r, 0) / ratings.length
         : 0;
 
       res.json({
