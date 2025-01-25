@@ -17,6 +17,12 @@ interface RunStats {
   averageRating: number;
 }
 
+interface SetlistShow {
+  date: string;
+  venue: string;
+  setlist: string;
+}
+
 export async function getRecentShows(): Promise<Show[]> {
   const response = await fetch('/api/shows/recent');
   return response.json();
@@ -29,5 +35,10 @@ export async function getSongStats(): Promise<SongStat[]> {
 
 export async function getRunStats(): Promise<RunStats> {
   const response = await fetch('/api/runs/stats');
+  return response.json();
+}
+
+export async function getSetlist(songName: string): Promise<SetlistShow[]> {
+  const response = await fetch(`/api/setlist/${encodeURIComponent(songName)}`);
   return response.json();
 }

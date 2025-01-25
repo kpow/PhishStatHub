@@ -79,6 +79,25 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
+  app.get('/api/setlist/:songName', async (req, res) => {
+    try {
+      const shows = await fetchPhishData('/attendance/username/koolyp');
+      const songName = req.params.songName;
+
+      const showsWithSong = shows
+        .filter((show: any) => show.songdata && show.songdata.includes(songName))
+        .map((show: any) => ({
+          date: show.showdate,
+          venue: show.venue,
+          setlist: show.setlist_notes || 'No setlist notes available'
+        }));
+
+      res.json(showsWithSong);
+    } catch (error) {
+      res.status(500).json({ message: (error as Error).message });
+    }
+  });
+
   app.get('/api/runs/stats', async (_req, res) => {
     try {
       const shows = await fetchPhishData('/attendance/username/koolyp');
