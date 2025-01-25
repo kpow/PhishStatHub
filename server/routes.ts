@@ -44,7 +44,8 @@ export function registerRoutes(app: Express): Server {
           venue: show.venue,
           location: `${show.city}, ${show.state}`,
           rating: parseFloat(show.rating) || 0,
-          setlist_notes: show.setlist_notes || ''
+          setlist_notes: show.setlist_notes || '',
+          setlist: show.setlistdata || ''
         }));
 
       res.json(formattedShows);

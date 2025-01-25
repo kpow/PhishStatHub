@@ -46,10 +46,36 @@ export function ShowStats() {
               {shows?.find(s => s.id === selectedShow)?.venue}
             </DialogTitle>
           </DialogHeader>
-          <div className="mt-4">
-            <p className="text-sm text-gray-600">
-              {shows?.find(s => s.id === selectedShow)?.setlist_notes || 'No setlist notes available'}
-            </p>
+          <div className="mt-4 space-y-4">
+            {/* Show Date and Location */}
+            {(() => {
+              const show = shows?.find(s => s.id === selectedShow);
+              if (!show) return null;
+              return (
+                <>
+                  <div>
+                    <p className="text-sm font-medium text-black/70">{show.date}</p>
+                    <p className="text-sm text-black/70">{show.location}</p>
+                  </div>
+                  {/* Setlist */}
+                  {show.setlist && (
+                    <div>
+                      <h3 className="text-sm font-medium mb-2">Setlist</h3>
+                      <p className="text-sm whitespace-pre-wrap">{show.setlist}</p>
+                    </div>
+                  )}
+                  {/* Notes */}
+                  {show.setlist_notes && (
+                    <div>
+                      <h3 className="text-sm font-medium mb-2">Notes</h3>
+                      <p className="text-sm text-gray-600" 
+                         dangerouslySetInnerHTML={{ __html: show.setlist_notes }} 
+                      />
+                    </div>
+                  )}
+                </>
+              );
+            })()}
           </div>
         </DialogContent>
       </Dialog>

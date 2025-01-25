@@ -5,6 +5,7 @@ interface Show {
   location: string;
   rating: number;
   setlist_notes?: string;
+  setlist?: string;
 }
 
 interface SongStat {
@@ -16,12 +17,6 @@ interface RunStats {
   totalShows: number;
   uniqueVenues: number;
   averageRating: number;
-}
-
-interface SetlistShow {
-  date: string;
-  venue: string;
-  setlist: string;
 }
 
 export async function getRecentShows(): Promise<Show[]> {
@@ -42,4 +37,10 @@ export async function getRunStats(): Promise<RunStats> {
 export async function getSetlist(songName: string): Promise<SetlistShow[]> {
   const response = await fetch(`/api/setlist/${encodeURIComponent(songName)}`);
   return response.json();
+}
+
+interface SetlistShow {
+  date: string;
+  venue: string;
+  setlist: string;
 }
