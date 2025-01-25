@@ -52,8 +52,8 @@ export function RunStats() {
           <div className="relative">
             <h3 className="text-sm font-medium text-black/70 mb-4">Most Visited Venues</h3>
             {/* Fixed height container for venue list with consistent height during loading */}
-            <div className="h-[240px] overflow-auto">
-              <div className="space-y-3 pb-16">
+            <div className="h-[240px]">
+              <div className="space-y-3">
                 {isLoading ? (
                   // Loading skeleton
                   Array(5).fill(0).map((_, index) => (
@@ -78,7 +78,7 @@ export function RunStats() {
 
             {/* Pagination with fixed position */}
             {venueStats && (
-              <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center py-2 bg-white/50 backdrop-blur-sm border-t border-black/5">
+              <div className="mt-4 flex justify-between items-center py-2 bg-white/50 backdrop-blur-sm border-t border-black/5">
                 <Button
                   variant="outline"
                   size="sm"
