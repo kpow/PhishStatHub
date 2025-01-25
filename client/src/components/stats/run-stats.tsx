@@ -37,13 +37,13 @@ export function RunStats() {
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <h3 className="text-sm font-medium text-black/70">Total Shows</h3>
+          <div className="grid grid-cols-2 gap-8">
+            <div className="text-center">
+              <h3 className="text-sm font-medium text-black/70 mb-2">Total Shows</h3>
               <p className="text-3xl font-mono">{stats?.totalShows || 0}</p>
             </div>
-            <div>
-              <h3 className="text-sm font-medium text-black/70">Unique Venues</h3>
+            <div className="text-center">
+              <h3 className="text-sm font-medium text-black/70 mb-2">Unique Venues</h3>
               <p className="text-3xl font-mono">{stats?.uniqueVenues || 0}</p>
             </div>
           </div>
@@ -53,7 +53,7 @@ export function RunStats() {
             <h3 className="text-sm font-medium text-black/70 mb-4">Most Visited Venues</h3>
             {/* Fixed height container for venue list with consistent height during loading */}
             <div className="h-[240px] overflow-hidden">
-              <div className="space-y-3">
+              <div className="space-y-3 pb-14">
                 {isLoading ? (
                   // Loading skeleton
                   Array(5).fill(0).map((_, index) => (
