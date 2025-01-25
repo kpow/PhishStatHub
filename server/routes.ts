@@ -48,8 +48,14 @@ export function registerRoutes(app: Express): Server {
       const { showId } = req.params;
       const setlistData = await fetchPhishData(`/setlists/showid/${showId}`);
 
-      // Add debug logging
-      console.log('Setlist data for show:', showId, JSON.stringify(setlistData, null, 2));
+      // Add debug logging for setlist data structure
+      console.log('Setlist data structure:', {
+        raw: setlistData,
+        isArray: Array.isArray(setlistData),
+        length: Array.isArray(setlistData) ? setlistData.length : 0,
+        firstItem: Array.isArray(setlistData) && setlistData.length > 0 ? setlistData[0] : null,
+        keys: Array.isArray(setlistData) && setlistData.length > 0 ? Object.keys(setlistData[0]) : []
+      });
 
       // The API returns an array, we want the first item
       if (Array.isArray(setlistData) && setlistData.length > 0) {
