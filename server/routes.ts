@@ -219,7 +219,8 @@ export function registerRoutes(app: Express): Server {
             songOccurrences.push({
               date: show.showdate,
               venue: show.venue,
-              setlist: `Set ${songInSetlist.set}: ${songInSetlist.song}${songInSetlist.trans_mark || ''}`
+              setlist: `Set ${songInSetlist.set}: ${songInSetlist.song}${songInSetlist.trans_mark || ''}`,
+              url: show.permalink || `https://phish.net/setlists/${show.showdate}`
             });
           }
         }

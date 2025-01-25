@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useState } from "react";
+import { ExternalLink } from 'lucide-react';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip);
 
@@ -159,7 +160,17 @@ export function SongStats() {
               <div className="space-y-4">
                 {occurrences.map((occurrence, index) => (
                   <div key={index} className="border-b pb-2">
-                    <p className="font-medium">{occurrence.date}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium">{occurrence.date}</p>
+                      <a 
+                        href={occurrence.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-black/50 hover:text-black transition-colors"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    </div>
                     <p className="text-sm text-black/70">{occurrence.venue}</p>
                     <p className="text-sm mt-1">{occurrence.setlist}</p>
                   </div>

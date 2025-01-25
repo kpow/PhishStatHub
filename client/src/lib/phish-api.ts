@@ -56,6 +56,7 @@ interface SetlistShow {
   date: string;
   venue: string;
   setlist: string;
+  url: string;
 }
 
 interface Setlist {
