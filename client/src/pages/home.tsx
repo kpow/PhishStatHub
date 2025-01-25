@@ -9,7 +9,7 @@ export default function Home() {
     <div className="min-h-screen bg-white text-black flex flex-col">
       <Nav />
       <div className="flex-1 bg-[linear-gradient(45deg,rgba(0,0,0,.1)_25%,transparent_25%,transparent_50%,rgba(0,0,0,.1)_50%,rgba(0,0,0,.1)_75%,transparent_75%,transparent)] bg-[size:5px_5px]">
-        <main className="container mx-auto p-4">
+        <main className="container mx-auto px-4 py-6 max-w-[1400px]">
           <div className="grid gap-6">
             <ShowStats />
             <RunStats />

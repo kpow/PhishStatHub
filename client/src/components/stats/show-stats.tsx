@@ -60,12 +60,12 @@ export function ShowStats() {
         <CardHeader>
           <CardTitle className="font-slackey">Shows</CardTitle>
         </CardHeader>
-        <CardContent className="p-4 md:p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        <CardContent className="p-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {showsData?.shows.map((show) => (
               <Card 
                 key={show.id} 
-                className="hover:bg-black/5 cursor-pointer transition-colors border border-black/10 w-full"
+                className="hover:bg-black/5 cursor-pointer transition-colors border border-black/10 h-full"
                 onClick={() => setSelectedShow(show.id)}
               >
                 <CardContent className="p-4">
@@ -93,7 +93,7 @@ export function ShowStats() {
 
           {/* Pagination */}
           {showsData && (
-            <div className="flex justify-between items-center mt-6">
+            <div className="mt-6 flex justify-between items-center">
               <Button
                 variant="outline"
                 onClick={() => setPage(p => Math.max(1, p - 1))}
