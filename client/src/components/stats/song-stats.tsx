@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
-import { getSongStats, getSetlist } from "@/lib/phish-api";
+import { getSongStats, getSetlistOccurrences } from "@/lib/phish-api";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip } from 'chart.js';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -21,8 +21,8 @@ export function SongStats() {
   });
 
   const { data: setlist } = useQuery({
-    queryKey: ['/api/setlist', selectedSong],
-    queryFn: () => selectedSong ? getSetlist(selectedSong) : null,
+    queryKey: ['/api/setlist/occurrences', selectedSong],
+    queryFn: () => selectedSong ? getSetlistOccurrences(selectedSong) : null,
     enabled: !!selectedSong
   });
 
