@@ -75,3 +75,8 @@ export async function getShowSetlist(showId: string): Promise<Setlist> {
   const response = await fetch(`/api/setlists/${showId}`);
   return response.json();
 }
+
+export async function getSetlistOccurrences(songName: string): Promise<SetlistShow[]> {
+  const response = await fetch(`/api/setlist/occurrences/${encodeURIComponent(songName)}`);
+  return response.json();
+}

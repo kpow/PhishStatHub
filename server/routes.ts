@@ -204,6 +204,34 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
+  app.get('/api/setlist/:songName', async (req, res) => {
+    try {
+      const { songName } = req.params;
+      const shows = await fetchPhishData('/attendance/username/koolyp');
+      const songOccurrences = [];
+
+      // Fetch setlist for each show and find occurrences of the song
+      for (const show of shows) {
+        const setlist = await fetchPhishData(`/setlists/showid/${show.showid}`);
+        if (Array.isArray(setlist)) {
+          const songInSetlist = setlist.find((entry: any) => entry.song === songName);
+          if (songInSetlist) {
+            songOccurrences.push({
+              date: show.showdate,
+              venue: show.venue,
+              setlist: `Set ${songInSetlist.set}: ${songInSetlist.song}${songInSetlist.trans_mark || ''}`
+            });
+          }
+        }
+      }
+
+      res.json(songOccurrences);
+    } catch (error) {
+      console.error('Error fetching song setlist:', error);
+      res.status(500).json({ message: (error as Error).message });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
