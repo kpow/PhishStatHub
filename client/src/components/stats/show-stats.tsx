@@ -61,11 +61,11 @@ export function ShowStats() {
           <CardTitle className="font-slackey">Shows</CardTitle>
         </CardHeader>
         <CardContent className="p-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-screen-xl mx-auto">
             {showsData?.shows.map((show) => (
               <Card 
                 key={show.id} 
-                className="hover:bg-black/5 cursor-pointer transition-colors border border-black/10 h-full"
+                className="hover:bg-black/5 cursor-pointer transition-colors border border-black/10"
                 onClick={() => setSelectedShow(show.id)}
               >
                 <CardContent className="p-4">
@@ -123,7 +123,7 @@ export function ShowStats() {
               {showsData?.shows.find(s => s.id === selectedShow)?.venue}
             </DialogTitle>
           </DialogHeader>
-          <div className="mt-4 space-y-4">
+          <div className="mt-4">
             {(() => {
               const show = showsData?.shows.find(s => s.id === selectedShow);
               if (!show) return null;
@@ -136,7 +136,6 @@ export function ShowStats() {
                     <p className="text-sm text-black/70">{show.location}</p>
                     {show.tour && <p className="text-sm text-black/60 mt-1">{show.tour}</p>}
                   </div>
-                  {/* Setlist */}
                   {setlist?.setlistdata && (
                     <div>
                       <h3 className="text-sm font-medium mb-2">Setlist</h3>
@@ -145,7 +144,6 @@ export function ShowStats() {
                       </div>
                     </div>
                   )}
-                  {/* Notes */}
                   {setlist?.setlistnotes && (
                     <div>
                       <h3 className="text-sm font-medium mb-2">Notes</h3>
