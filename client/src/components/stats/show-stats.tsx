@@ -61,7 +61,7 @@ export function ShowStats() {
           <CardTitle className="font-slackey">Shows</CardTitle>
         </CardHeader>
         <CardContent className="p-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-screen-xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 container mx-auto">
             {showsData?.shows.map((show) => (
               <Card 
                 key={show.id} 
@@ -91,7 +91,6 @@ export function ShowStats() {
             ))}
           </div>
 
-          {/* Pagination */}
           {showsData && (
             <div className="mt-6 flex justify-between items-center">
               <Button
@@ -147,8 +146,9 @@ export function ShowStats() {
                   {setlist?.setlistnotes && (
                     <div>
                       <h3 className="text-sm font-medium mb-2">Notes</h3>
-                      <p className="text-sm text-gray-600" 
-                         dangerouslySetInnerHTML={{ __html: setlist.setlistnotes }} 
+                      <p 
+                        className="text-sm text-gray-600" 
+                        dangerouslySetInnerHTML={{ __html: setlist.setlistnotes }} 
                       />
                     </div>
                   )}
