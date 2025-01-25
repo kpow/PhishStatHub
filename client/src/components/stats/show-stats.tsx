@@ -11,6 +11,13 @@ export function ShowStats() {
     queryFn: getRecentShows
   });
 
+  const formatSetlist = (setlist: string) => {
+    // Split the setlist into lines for better formatting
+    return setlist.split('\n').map((line, i) => (
+      <p key={i} className="text-sm">{line}</p>
+    ));
+  };
+
   return (
     <>
       <Card className="bg-white/50 backdrop-blur-sm border-black/10">
@@ -40,14 +47,13 @@ export function ShowStats() {
       </Card>
 
       <Dialog open={!!selectedShow} onOpenChange={() => setSelectedShow(null)}>
-        <DialogContent>
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>
               {shows?.find(s => s.id === selectedShow)?.venue}
             </DialogTitle>
           </DialogHeader>
           <div className="mt-4 space-y-4">
-            {/* Show Date and Location */}
             {(() => {
               const show = shows?.find(s => s.id === selectedShow);
               if (!show) return null;
@@ -61,7 +67,9 @@ export function ShowStats() {
                   {show.setlist && (
                     <div>
                       <h3 className="text-sm font-medium mb-2">Setlist</h3>
-                      <p className="text-sm whitespace-pre-wrap">{show.setlist}</p>
+                      <div className="text-sm whitespace-pre-line font-mono bg-black/5 p-4 rounded-lg">
+                        {formatSetlist(show.setlist)}
+                      </div>
                     </div>
                   )}
                   {/* Notes */}
