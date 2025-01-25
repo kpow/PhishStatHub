@@ -52,8 +52,8 @@ export function RunStats() {
           <div className="relative">
             <h3 className="text-sm font-medium text-black/70 mb-4">Most Visited Venues</h3>
             {/* Fixed height container for venue list with consistent height during loading */}
-            <div className="h-[240px] overflow-hidden">
-              <div className="space-y-3 pb-14">
+            <div className="h-[240px] overflow-auto">
+              <div className="space-y-3 pb-16">
                 {isLoading ? (
                   // Loading skeleton
                   Array(5).fill(0).map((_, index) => (
