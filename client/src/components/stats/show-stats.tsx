@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getShowSetlist } from "@/lib/phish-api";
 import { ExternalLink } from "lucide-react";
 import { useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Show {
   id: string;
@@ -29,11 +30,29 @@ const DAYS_OF_WEEK = [
   'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
 ];
 
+function ShowSkeleton() {
+  return (
+    <Card className="border border-black/10">
+      <CardContent className="p-4">
+        <div className="flex flex-col h-full gap-2">
+          <div className="flex items-start justify-between">
+            <Skeleton className="h-6 w-3/4" />
+            <Skeleton className="h-4 w-4" />
+          </div>
+          <Skeleton className="h-4 w-1/2" />
+          <Skeleton className="h-4 w-2/3" />
+          <Skeleton className="h-4 w-1/3 mt-auto" />
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 export function ShowStats() {
   const [selectedShow, setSelectedShow] = useState<string | null>(null);
   const [page, setPage] = useState(1);
 
-  const { data: showsData } = useQuery<ShowsResponse>({
+  const { data: showsData, isLoading } = useQuery<ShowsResponse>({
     queryKey: ['/api/shows', page],
     queryFn: async () => {
       const response = await fetch(`/api/shows?page=${page}&limit=12`);
@@ -63,33 +82,39 @@ export function ShowStats() {
         <CardContent className="p-4">
           <div className="w-full max-w-[90rem] mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-              {showsData?.shows.map((show) => (
-                <Card 
-                  key={show.id} 
-                  className="hover:bg-black/5 cursor-pointer transition-colors border border-black/10"
-                  onClick={() => setSelectedShow(show.id)}
-                >
-                  <CardContent className="p-4">
-                    <div className="flex flex-col h-full">
-                      <div className="flex items-start justify-between mb-2">
-                        <h3 className="font-medium truncate flex-1 pr-2">{show.venue}</h3>
-                        <a 
-                          href={show.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="text-black/50 hover:text-black transition-colors shrink-0"
-                        >
-                          <ExternalLink className="h-4 w-4" />
-                        </a>
+              {isLoading ? (
+                Array.from({ length: 12 }).map((_, i) => (
+                  <ShowSkeleton key={i} />
+                ))
+              ) : (
+                showsData?.shows.map((show) => (
+                  <Card 
+                    key={show.id} 
+                    className="hover:bg-black/5 cursor-pointer transition-colors border border-black/10"
+                    onClick={() => setSelectedShow(show.id)}
+                  >
+                    <CardContent className="p-4">
+                      <div className="flex flex-col h-full">
+                        <div className="flex items-start justify-between mb-2">
+                          <h3 className="font-medium truncate flex-1 pr-2">{show.venue}</h3>
+                          <a 
+                            href={show.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-black/50 hover:text-black transition-colors shrink-0"
+                          >
+                            <ExternalLink className="h-4 w-4" />
+                          </a>
+                        </div>
+                        <p className="text-sm text-black/70">{show.date} • {DAYS_OF_WEEK[show.showday]}</p>
+                        <p className="text-sm text-black/70 mt-1">{show.location}</p>
+                        {show.tour && <p className="text-xs text-black/60 mt-auto pt-2">{show.tour}</p>}
                       </div>
-                      <p className="text-sm text-black/70">{show.date} • {DAYS_OF_WEEK[show.showday]}</p>
-                      <p className="text-sm text-black/70 mt-1">{show.location}</p>
-                      {show.tour && <p className="text-xs text-black/60 mt-auto pt-2">{show.tour}</p>}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    </CardContent>
+                  </Card>
+                ))
+              )}
             </div>
           </div>
 
@@ -98,7 +123,7 @@ export function ShowStats() {
               <Button
                 variant="outline"
                 onClick={() => setPage(p => Math.max(1, p - 1))}
-                disabled={page === 1}
+                disabled={page === 1 || isLoading}
               >
                 Previous
               </Button>
@@ -108,7 +133,7 @@ export function ShowStats() {
               <Button
                 variant="outline"
                 onClick={() => setPage(p => p + 1)}
-                disabled={!showsData.pagination.hasMore}
+                disabled={!showsData.pagination.hasMore || isLoading}
               >
                 Next
               </Button>
@@ -118,7 +143,7 @@ export function ShowStats() {
       </Card>
 
       <Dialog open={!!selectedShow} onOpenChange={() => setSelectedShow(null)}>
-        <DialogContent className="max-w-2xl" description="Show details and setlist">
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>
               {showsData?.shows.find(s => s.id === selectedShow)?.venue}
