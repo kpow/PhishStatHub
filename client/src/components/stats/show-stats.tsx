@@ -9,9 +9,9 @@ export function ShowStats() {
   });
 
   return (
-    <Card className="bg-black/50 backdrop-blur-sm border-white/10">
+    <Card className="bg-white/50 backdrop-blur-sm border-black/10">
       <CardHeader>
-        <CardTitle className="font-mono">Recent Shows</CardTitle>
+        <CardTitle className="font-slackey">Recent Shows</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -19,11 +19,11 @@ export function ShowStats() {
             <div key={show.id} className="flex justify-between items-center">
               <div>
                 <h3 className="font-medium">{show.venue}</h3>
-                <p className="text-sm text-white/70">{show.date}</p>
+                <p className="text-sm text-black/70">{show.date}</p>
               </div>
               <div className="text-right">
                 <p className="text-sm">{show.location}</p>
-                <p className="text-sm text-white/70">{show.rating} avg rating</p>
+                <p className="text-sm text-black/70">{show.rating} avg rating</p>
               </div>
             </div>
           ))}

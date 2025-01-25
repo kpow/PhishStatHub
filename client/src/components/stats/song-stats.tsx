@@ -17,16 +17,16 @@ export function SongStats() {
     datasets: [{
       label: 'Times Played',
       data: stats?.map(s => s.count) || [],
-      backgroundColor: 'rgba(255, 255, 255, 0.2)',
-      borderColor: 'rgba(255, 255, 255, 0.8)',
+      backgroundColor: 'rgba(0, 0, 0, 0.2)',
+      borderColor: 'rgba(0, 0, 0, 0.8)',
       borderWidth: 1
     }]
   };
 
   return (
-    <Card className="bg-black/50 backdrop-blur-sm border-white/10">
+    <Card className="bg-white/50 backdrop-blur-sm border-black/10">
       <CardHeader>
-        <CardTitle className="font-mono">Song Statistics</CardTitle>
+        <CardTitle className="font-slackey">Song Statistics</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-[300px]">
@@ -37,10 +37,17 @@ export function SongStats() {
               maintainAspectRatio: false,
               scales: {
                 x: {
-                  ticks: { color: 'white' }
+                  ticks: { color: 'black' }
                 },
                 y: {
-                  ticks: { color: 'white' }
+                  ticks: { color: 'black' }
+                }
+              },
+              plugins: {
+                legend: {
+                  labels: {
+                    color: 'black'
+                  }
                 }
               }
             }}

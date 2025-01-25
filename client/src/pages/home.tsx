@@ -5,8 +5,8 @@ import { RunStats } from "@/components/stats/run-stats";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="bg-[linear-gradient(45deg,rgba(255,255,255,.1)_25%,transparent_25%,transparent_50%,rgba(255,255,255,.1)_50%,rgba(255,255,255,.1)_75%,transparent_75%,transparent)] bg-[size:5px_5px]">
+    <div className="min-h-screen bg-white text-black">
+      <div className="bg-[linear-gradient(45deg,rgba(0,0,0,.1)_25%,transparent_25%,transparent_50%,rgba(0,0,0,.1)_50%,rgba(0,0,0,.1)_75%,transparent_75%,transparent)] bg-[size:5px_5px]">
         <Nav />
         <main className="container mx-auto p-4">
           <div className="grid gap-6">
