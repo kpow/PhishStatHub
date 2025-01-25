@@ -57,17 +57,48 @@ export function registerRoutes(app: Express): Server {
         keys: Array.isArray(setlistData) && setlistData.length > 0 ? Object.keys(setlistData[0]) : []
       });
 
-      // The API returns an array, we want the first item
       if (Array.isArray(setlistData) && setlistData.length > 0) {
-        const setlist = setlistData[0];
+        // Group songs by set
+        const setGroups = setlistData.reduce((acc: any, song: any) => {
+          if (!acc[song.set]) {
+            acc[song.set] = [];
+          }
+          acc[song.set].push({
+            name: song.song,
+            transition: song.trans_mark,
+            position: song.position,
+            jamchart: song.isjamchart ? song.jamchart_description : null
+          });
+          return acc;
+        }, {});
 
-        // Format and return both setlist data and notes
+        // Format the setlist text
+        const formatSet = (songs: any[]) => {
+          return songs
+            .sort((a, b) => a.position - b.position)
+            .map(song => song.name + song.transition)
+            .join(' ').trim();
+        };
+
+        // Build the complete setlist text
+        let setlistText = '';
+        if (setGroups['1']) {
+          setlistText += 'Set 1: ' + formatSet(setGroups['1']) + '\n\n';
+        }
+        if (setGroups['2']) {
+          setlistText += 'Set 2: ' + formatSet(setGroups['2']) + '\n\n';
+        }
+        if (setGroups['e']) {
+          setlistText += 'Encore: ' + formatSet(setGroups['e']) + '\n\n';
+        }
+
+        const firstSong = setlistData[0];
         res.json({
-          showdate: setlist.showdate,
-          venue: setlist.venue,
-          location: `${setlist.city}, ${setlist.state}`,
-          setlistdata: setlist.setlistdata || '',
-          setlistnotes: setlist.setlistnotes || ''
+          showdate: firstSong.showdate,
+          venue: firstSong.venue,
+          location: `${firstSong.city}, ${firstSong.state}`,
+          setlistdata: setlistText,
+          setlistnotes: firstSong.setlistnotes || ''
         });
       } else {
         res.status(404).json({ message: 'Setlist not found' });
