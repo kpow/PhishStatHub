@@ -28,7 +28,7 @@ export function registerRoutes(app: Express): Server {
 
       const shows = await fetchPhishData('/attendance/username/koolyp');
 
-      const sortedShows = shows.sort((a: any, b: any) => 
+      const sortedShows = shows.sort((a: any, b: any) =>
         new Date(b.showdate).getTime() - new Date(a.showdate).getTime()
       );
 
@@ -42,8 +42,8 @@ export function registerRoutes(app: Express): Server {
         venue: show.venue,
         location: `${show.city}, ${show.state}`,
         showday: show.showday,
-        tour: show.tour || 'No Tour',
-        url: `https://phish.net/setlists/${show.showdate}`
+        tour: show.tour || '',
+        url: show.permalink
       }));
 
       const total = shows.length;
